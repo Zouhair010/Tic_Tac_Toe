@@ -23,24 +23,20 @@ gameOver = False
 # Sets to track moves made by computer and player
 computer_moves = set()
 player_moves = set()
-# Create and display the 3x3 game board
-def display_board():    
-    for row in range(3):
-        for col in range(3):
-            ent = tk.Entry(game_frame,font=("Arial",60,"bold"),borderwidth=1,relief="solid",width=2)
-            ent.config(state='readonly') # Make it read-only initially
-            ent.bind("<FocusIn>",player_move) # Bind click event to player_move function
-            listEntries.append(ent) # Add to list for later reference
-            ent.grid(row=row,column=col) # Place in grid
+
 # Handle player's move when they click on a cell
 def player_move(event):
     global player_moves,available_cases,listEntries
     # Get the currently focused Entry widget
     active = game_frame.focus_get()
+    
+    if active not in listEntries:
+        return
+    
     # Find the index of this widget in our list (0-8 for the 3x3 grid)
     player_choice = listEntries.index(active)
     # Check if the chosen cell is already occupied or if game is over
-    if int(player_choice) in computer_moves or int(player_choice) in player_moves or gameOver:
+    if int(player_choice) in computer_moves or int(player_choice) in player_moves:
         return
     # Record the player's move
     player_moves.add(int(player_choice))
@@ -59,6 +55,9 @@ def player_move(event):
     # If game is still ongoing, let computer make its move
     if not gameOver:
         computer_move()
+    else:
+        restart()
+        
 # Handle computer's move
 def computer_move():
     global player_moves,available_cases,computer_moves,listEntries
@@ -98,6 +97,8 @@ def computer_move():
         computer_moves.add(int(computer_choice))
     # Check if computer won with this move
     check_winner(computer_moves, "o",computer_choice)
+    if gameOver:
+        restart()
 
 # Check for win conditions or draw
 def check_winner(player_moves, symbol,player_turn):
@@ -135,18 +136,45 @@ def check_winner(player_moves, symbol,player_turn):
                     listEntries[i].config(fg='red')
                 messagebox.showinfo("","You lose!")
             # End the game
-            gameOver = True 
-            
+            gameOver = True       
             return
 
+# Create and display the 3x3 game board     
+def display_board():
+    global listEntries
+    for row in range(3):
+        for col in range(3):
+            ent = tk.Entry(game_frame,font=("Arial",60,"bold"),borderwidth=1,relief="solid",width=2)
+            ent.config(state='readonly') # Make it read-only initially
+            ent.bind("<FocusIn>",player_move) # Bind click event to player_move function
+            listEntries.append(ent) # Add to list for later reference
+            ent.grid(row=row,column=col) # Place in grid
+
+def restart():
+    global player_moves,available_cases,computer_moves,listEntries,gameOver
+    while len(listEntries):
+        listEntries[0].grid_forget()
+        listEntries.pop(0)
+    display_board()
+    available_cases = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+    ]
+    gameOver = False
+    computer_moves = set()
+    player_moves = set()
+        
 # Create main window
 window = tk.Tk()
 window.title("tic_tac_toe")# Note: Title doesn't match the game content
 window.resizable(False, False)# Disable window resizing
 # Create frame to contain the game board
-game_frame = tk.LabelFrame(window, text='tic_tac_toe',background='#80bfff',fg='#800080',highlightbackground='#800080',border=1,relief="solid",font=('Arial',11,'bold'))
+game_frame = tk.Frame(window,background='#80bfff',highlightbackground='#800080',border=1,relief="solid")
 game_frame.pack()
+
 # Initialize and display the game board
 display_board()
+
 # Start the GUI event loop
 window.mainloop()
