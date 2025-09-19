@@ -24,20 +24,16 @@ class InitialScreen(BoxLayout):
     """
     def __init__(self, switch_player_vs_player_mode, switch_player_computer_mode, **kwargs):
         super().__init__(**kwargs)
-
         # Set the main layout to be vertical with significant padding and spacing
         # to center the content.
         self.orientation = "vertical"
         self.padding = 250
         self.spacing = 100
-
         # Use an AnchorLayout to center the button grid within the available space.
         self.anchorlayout = AnchorLayout(anchor_x='center', anchor_y='center')
-
         # A GridLayout to hold the mode selection buttons.
         # It's configured with 3 columns to allow for spacing.
         self.buttons_gridlayout = GridLayout(cols=3, size_hint_y=None, spacing=30)
-
         # first button
         play_vs_computer_mode_button = Button(
             text="player vs compute",
@@ -49,10 +45,8 @@ class InitialScreen(BoxLayout):
         # Binds the button's 'on_release' event to the function that switches to Player vs. Computer mode.
         play_vs_computer_mode_button.bind(on_release = switch_player_computer_mode)
         self.buttons_gridlayout.add_widget(play_vs_computer_mode_button)
-
         # An empty widget to create space between the two buttons.
         self.buttons_gridlayout.add_widget(Widget())
-
         # second button
         player_vs_player_mode_button = Button(
             text="player vs player",
@@ -64,12 +58,9 @@ class InitialScreen(BoxLayout):
         # Binds the button's 'on_release' event to the function that switches to Player vs. Player mode.
         player_vs_player_mode_button.bind(on_release = switch_player_vs_player_mode)
         self.buttons_gridlayout.add_widget(player_vs_player_mode_button)
-
         # Add the grid of buttons to the anchor layout, and then the anchor layout to the main screen.
         self.anchorlayout.add_widget(self.buttons_gridlayout)
         self.add_widget(self.anchorlayout)
-
-
 
 # This class defines the layout and game logic for the Player vs. Player mode.
 class FirstScreen(BoxLayout):
@@ -79,23 +70,18 @@ class FirstScreen(BoxLayout):
     """
     def __init__(self, switch_game, switch_back, **kwargs):
         super().__init__(**kwargs)
-
         # Set the main layout to be horizontal, allowing the game board and scoreboard to be side-by-side.
         self.orientation = "horizontal"
         self.padding = 20
         self.spacing = 10
-
         # A vertical BoxLayout to contain the game grid and the control buttons below it.
         self.game_boxlayout = BoxLayout(orientation = "vertical", padding = 50, spacing = 10)
-
         # GridLayout for the 3x3 Tic-Tac-Toe board cells.
         self.textInput_gridlayout = GridLayout(cols=3)
         self.game_boxlayout.add_widget(self.textInput_gridlayout)
-        
         # GridLayout for the control buttons (restart, switch, back).
         # It's configured with 3 columns.
         self.buttons_gridlayout = GridLayout(cols=3, size_hint_y=None, height=50,padding=(30,10) ,spacing=10)
-
         # 'Restart' button to start a new game in the current mode.
         restart_button = Button(
             text="restart",
@@ -107,7 +93,6 @@ class FirstScreen(BoxLayout):
         # Binds the button's 'on_release' event to this class's 'restart' method.
         restart_button.bind(on_release = self.restart)
         self.buttons_gridlayout.add_widget(restart_button)
-
         # 'Switch' button to change to the other game mode (e.g., PvP to PvC).
         # The actual switch logic is handled by the main app class.
         switch_game_button = Button(
@@ -120,7 +105,6 @@ class FirstScreen(BoxLayout):
         # Binds the button's 'on_release' event to the switch_game function passed from the main app.
         switch_game_button.bind(on_release = switch_game)
         self.buttons_gridlayout.add_widget(switch_game_button)
-
         # 'Back' button to return to the initial mode selection screen.
         back_button = Button(
             text="back",
@@ -135,50 +119,49 @@ class FirstScreen(BoxLayout):
         # Add the grid of control buttons to the game layout.
         self.game_boxlayout.add_widget(self.buttons_gridlayout)
         self.add_widget(self.game_boxlayout)
-
         # An AnchorLayout to center the scoreboard on the right side of the screen.
         self.anchorlayout = AnchorLayout(anchor_x='center', anchor_y='center')
-        # A BoxLayout to organize the score labels and text inputs vertically.
-        self.scours_boxlayout = BoxLayout(orientation='vertical', size_hint=(None, None), size=(250, 150), spacing=10)
-
+        # A GridLayout to organize the score labels and text inputs.
+        self.scours_gridlayout = GridLayout(cols=2, size_hint=(None, None), spacing=(90,0))
         # Label and TextInput for Player 1's score.
-        self.player1_scour_labe = Label(text="Player 1 (X) Score", color=(0,0,0,1),font_size=22)
-        self.scours_boxlayout.add_widget(self.player1_scour_labe)
+        self.player1_scour_labe = Label(text="Player 1 (X) Score", color=(0,0,1,3),font_size=22)
+        self.scours_gridlayout.add_widget(self.player1_scour_labe)
         self.player1_scour_textinput = TextInput(
                 halign="center",
                 # readonly=True,
                 size_hint=(None,None),
-                font_size=30,
+                font_size=27,
                 size=(70,50),
                 background_normal='',
                 background_active='',
                 multiline=False,
-                background_color=(.95, .95, .95, 1) # A very light gray
+                cursor_color = (1,1,1,1),
+                foreground_color=(0,0,1,3),
+                background_color=(.90, .90, .90, 1) # A very light gray
         )
         self.player1_scour_textinput.text = "0"
-        self.scours_boxlayout.add_widget(self.player1_scour_textinput)
-
+        self.scours_gridlayout.add_widget(self.player1_scour_textinput)
         # Label and TextInput for Player 2's score.
-        self.player2_scour_labe = Label(text="Player 2 (O) Score", color=(0,0,0,1),font_size=22) # Black text
-        self.scours_boxlayout.add_widget(self.player2_scour_labe)
+        self.player2_scour_labe = Label(text="Player 2 (O) Score", color=(0,0,1,3),font_size=22) # Black text
+        self.scours_gridlayout.add_widget(self.player2_scour_labe)
         self.player2_scour_textinput = TextInput(
             halign="center",
                 # readonly=True,
                 size_hint=(None,None),
-                font_size=30,
+                font_size=27,
                 size=(70,50),
                 background_normal='',
                 background_active='',
                 multiline=False,
-                background_color=(.95, .95, .95, 1) # A very light gray
+                cursor_color = (1,1,1,1),
+                foreground_color=(0,0,1,3),
+                background_color=(.90, .90, .90, 1) # A very light gray
         )
         self.player2_scour_textinput.text = "0"
-        self.scours_boxlayout.add_widget(self.player2_scour_textinput)
+        self.scours_gridlayout.add_widget(self.player2_scour_textinput)
         # Add the scoreboard layout to the anchor layout, and then to the main screen.
-        self.anchorlayout.add_widget(self.scours_boxlayout)
-
+        self.anchorlayout.add_widget(self.scours_gridlayout)
         self.add_widget(self.anchorlayout)
-
         # Define all possible winning combinations (rows, columns, diagonals).
         # Each set represents positions that form a winning line
         self.win_cases = [
@@ -201,11 +184,8 @@ class FirstScreen(BoxLayout):
         self.player2_symbol = "o"
         # Keep track of whose turn it is, starting with player 1.
         self.turn = self.player1_symbol
-
         # Initialize the game board by creating and adding the TextInput cells.
         self.display_board()
-
-
     def display_board(self):
         """
         Creates and populates the 3x3 grid with TextInput widgets.
@@ -219,16 +199,15 @@ class FirstScreen(BoxLayout):
                 size_hint=(None,None),
                 font_size=100,
                 size=(160,160),
+                cursor_color=(1, 1, 1, 1),
                 background_color=(1, 1, 1, 1), # White background for cells
                 multiline=False
-                
             )
             # Binds the 'on_touch_down' event of each cell to the 'player_move' method.
             # This is how the game registers a player's click.
             txtInput.bind(on_touch_down=self.player_move) # Bind click event to player_move function
             self.listEntries.append(txtInput) # Add to list for later reference
             self.textInput_gridlayout.add_widget(txtInput)
-
     def player_move(self,instance,touch):
         """
         Handles the logic when a player clicks on a cell.
@@ -258,10 +237,9 @@ class FirstScreen(BoxLayout):
                  self.available_cases.remove(int(player_choice))
                  # Check if this move results in a win.
                  self.check_winner(self.player1_symbol)
-                 # Switch the turn to Player 2.
+                 # Switch the turn to Player 2.cursor_color=(1, 1, 1, 1)
                  self.turn = self.player2_symbol
                  return
-
             # Handle Player 2's turn.
             if self.turn == self.player2_symbol and int(player_choice) in self.available_cases:
                  self.player2_moves.add(int(player_choice))
@@ -277,7 +255,6 @@ class FirstScreen(BoxLayout):
                  # Switch the turn to Player 1.
                  self.turn = self.player1_symbol
                  return
-            
     def check_winner(self,player_symbol):
         """
         Checks if the most recent move resulted in a win or a draw.
@@ -287,7 +264,8 @@ class FirstScreen(BoxLayout):
         if len(self.available_cases) == 0:
             # Highlight all cells to indicate a draw.
             for ent in self.listEntries:
-                ent.background_color = colors["LightGreen"]["200"] # Use a light green for draw
+                ent.cursor_color = colors["LightBlue"]["200"]
+                ent.background_color = colors["LightBlue"]["200"] # Use a light green for draw
             popup = Popup(
                     title = "it's draw!",
                     size_hint=(None,None),
@@ -307,6 +285,7 @@ class FirstScreen(BoxLayout):
             if case <= player_moves:  # check if all elements of case are in player_moves
                 # Highlight the winning combination of cells.
                 for i in case:
+                    self.listEntries[i].cursor_color = colors["LightGreen"]["200"]
                     self.listEntries[i].background_color = colors["LightGreen"]["200"]
                 # Set the game over flag to prevent further moves.
                 self.gameOver = True
@@ -318,7 +297,14 @@ class FirstScreen(BoxLayout):
                     # auto_dismiss=False
                 )
                 popup.open()
-        
+                if player_symbol == self.player1_symbol:
+                    self.player1_scour_textinput.readonly=False
+                    self.player1_scour_textinput.text = str(int(self.player1_scour_textinput.text) + 1)
+                    self.player1_scour_textinput.readonly=True
+                else:
+                    self.player2_scour_textinput.readonly=False
+                    self.player2_scour_textinput.text = str(int(self.player2_scour_textinput.text) + 1)
+                    self.player2_scour_textinput.readonly=True
     def restart(self,event):
         """
         Resets the game to its initial state for a new match.
@@ -327,6 +313,7 @@ class FirstScreen(BoxLayout):
         # Clear the text from all cells on the board.
         for ent in self.listEntries:
             ent.text = '' # Clear the 'x' or 'o'
+            ent.cursor_color = (1,1,1,1)
             ent.background_color = (1,1,1,1) # Reset cell background to white
         # Reset all game state variables to their initial values.
         # This includes available spots, game over status, player moves, and whose turn it is.
@@ -340,8 +327,6 @@ class FirstScreen(BoxLayout):
         self.player2_symbol = "o"
         self.turn = self.player1_symbol
 
-
-
 # This class defines the layout and game logic for the Player vs. Computer mode.
 class SecondScreen(BoxLayout):
     """
@@ -351,22 +336,18 @@ class SecondScreen(BoxLayout):
     """
     def __init__(self, switch_game, switch_back, **kwargs):
         super().__init__(**kwargs)
-
         # Set the main layout to be horizontal, allowing the game board and scoreboard to be side-by-side.
         self.orientation = "horizontal"
         self.padding = 20
         self.spacing = 10
-
         # A vertical BoxLayout to contain the game grid and the control buttons below it.
         self.game_boxlayout = BoxLayout(orientation = "vertical", padding = 50, spacing = 10)
         # GridLayout for the 3x3 Tic-Tac-Toe board cells.
         self.textInput_gridlayout = GridLayout(cols=3)
         self.game_boxlayout.add_widget(self.textInput_gridlayout)
-
         # GridLayout for the control buttons (restart, switch, back).
         # It's configured with 3 columns.
         self.buttons_gridlayout = GridLayout(cols=3, size_hint_y=None, height=50,padding=(30,10), spacing=10)
-
         # 'Restart' button to start a new game in this mode.
         restart_button = Button(
             text="restart",
@@ -378,7 +359,6 @@ class SecondScreen(BoxLayout):
         # Binds the button's 'on_release' event to this class's 'restart' method.
         restart_button.bind(on_release = self.restart)
         self.buttons_gridlayout.add_widget(restart_button)
-
         # 'Switch' button to change to the other game mode (e.g., PvC to PvP).
         # The actual switch logic is handled by the main app class.
         switch_game_button = Button(
@@ -403,55 +383,51 @@ class SecondScreen(BoxLayout):
         # Binds the button's 'on_release' event to the switch_back function from the main app.
         back_button.bind(on_release = switch_back)
         self.buttons_gridlayout.add_widget(back_button)
-
         # Add the grid of control buttons to the game layout.
         self.game_boxlayout.add_widget(self.buttons_gridlayout)
         self.add_widget(self.game_boxlayout)
-
-
         # An AnchorLayout to center the scoreboard on the right side of the screen.
         self.anchorlayout = AnchorLayout(anchor_x='center', anchor_y='center')
-        # A BoxLayout to organize the score labels and text inputs vertically.
-        self.scours_boxlayout = BoxLayout(orientation='vertical', size_hint=(None, None), size=(250, 150), spacing=10)
-
-        self.player_scour_labe = Label(text="Your Score", color=(0,0,0,1),font_size=22)
-        self.scours_boxlayout.add_widget(self.player_scour_labe)
+        # A GridLayout to organize the score labels and text inputs
+        self.scours_gridlayout = GridLayout(cols=2, size_hint=(None, None), spacing=(90,0))
+        self.player_scour_labe = Label(text="Your Score:", color=(0,0,1,3),font_size=22)
+        self.scours_gridlayout.add_widget(self.player_scour_labe)
         self.player_scour_textinput = TextInput(
                 halign="center",
                 # readonly=True,
                 size_hint=(None,None),
-                font_size=30,
+                font_size=27,
                 size=(70,50),
                 background_normal='',
                 background_active='',
                 multiline=False,
-                background_color=(.95, .95, .95, 1) # A very light gray
+                cursor_color = (1,1,1,1),
+                foreground_color=(0,0,1,3),
+                background_color=(.90, .90, .90, 1) # A very light gray
         )
         self.player_scour_textinput.text = "0"
-        self.scours_boxlayout.add_widget(self.player_scour_textinput)
-
+        self.scours_gridlayout.add_widget(self.player_scour_textinput)
         # Label and TextInput for the computer's score.
-        self.computer_scour_labe = Label(text="Computer Score", color=(0,0,0,1),font_size=22) # Black text
-        self.scours_boxlayout.add_widget(self.computer_scour_labe)
+        self.computer_scour_labe = Label(text="Computer Score:", color=(0,0,1,3),font_size=22) # Black text
+        self.scours_gridlayout.add_widget(self.computer_scour_labe)
         self.computer_scour_textinput = TextInput(
             halign="center",
                 # readonly=True,
                 size_hint=(None,None),
-                font_size=30,
+                font_size=27,
                 size=(70,50),
                 background_normal='',
                 background_active='',
                 multiline=False,
-                background_color=(.95, .95, .95, 1) # A very light gray
+                cursor_color = (1,1,1,1),
+                foreground_color=(0,0,1,3),
+                background_color=(.90, .90, .90, 1) # A very light gray
         )
         self.computer_scour_textinput.text = "0"
-        self.scours_boxlayout.add_widget(self.computer_scour_textinput)
+        self.scours_gridlayout.add_widget(self.computer_scour_textinput)
         # Add the scoreboard layout to the anchor layout, and then to the main screen.
-        self.anchorlayout.add_widget(self.scours_boxlayout)
-
+        self.anchorlayout.add_widget(self.scours_gridlayout)
         self.add_widget(self.anchorlayout)
-         
-
         # Define all possible winning combinations (rows, columns, diagonals).
         # Each set represents positions that form a winning line
         self.win_cases = [
@@ -474,9 +450,10 @@ class SecondScreen(BoxLayout):
         self.computer_moves = set()
         self.player_moves = set()
 
+        self.computer_isWin = False
+
         # Initialize the game board by creating and adding the TextInput cells.
         self.display_board()
-
     def display_board(self):
         """
         Creates and populates the 3x3 grid with TextInput widgets for the game board.
@@ -489,6 +466,7 @@ class SecondScreen(BoxLayout):
                 size_hint=(None,None),
                 font_size=100,
                 size=(160,160),
+                cursor_color=(1, 1, 1, 1),
                 background_color=(1, 1, 1, 1), # White background for cells
                 multiline=False
             )
@@ -496,7 +474,6 @@ class SecondScreen(BoxLayout):
             txtInput.bind(on_touch_down=self.player_move)
             self.listEntries.append(txtInput) # Add to list for later reference
             self.textInput_gridlayout.add_widget(txtInput)
-
     def player_move(self,instance,touch):
         """
         Handles the logic when the human player clicks on a cell.
@@ -521,18 +498,16 @@ class SecondScreen(BoxLayout):
             for case in self.available_cases:
                 if int(player_choice) in case:
                     case.remove(int(player_choice))
-
             # Update the visual representation of the move
             instance.readonly=False # Allow editing
             instance.foreground_color = colors["Blue"]["800"] # Player color
             instance.text = "x" # Insert 'x' symbol
             instance.readonly=True # Make read-only again
             # Check if player won with this move
-            self.check_winner(self.player_moves, "x",player_choice)
+            self.check_winner(self.player_moves, "x")
             # If the game is still ongoing, let the computer make its move.
             if not self.gameOver:
                 self.computer_move()
-
     # Handle computer's move
     def computer_move(self):
         """
@@ -547,7 +522,6 @@ class SecondScreen(BoxLayout):
         else:
             min_length = 3 # Start with maximum case length
             computer_choice = None
-            
             # --- AI Strategy 1: Find a "good" defensive or offensive move ---
             # It iterates through the remaining possible win lines ('available_cases').
             # It prefers lines with fewer open spots, hoping to block the player.
@@ -558,7 +532,6 @@ class SecondScreen(BoxLayout):
                         if case[i] not in self.computer_moves:
                             min_length = len(case)
                             computer_choice = case[i]
-            
             # --- AI Strategy 2: Check for an immediate win ---
             # This is the highest priority. It checks if the computer has 2 out of 3 spots
             # in any winning line and takes the 3rd spot if it's available.
@@ -569,7 +542,6 @@ class SecondScreen(BoxLayout):
                         # Find the empty position to complete the win
                         if i not in self.computer_moves and i not in self.player_moves:
                             computer_choice = i
-        
         # --- Execute the chosen move ---
         if computer_choice is not None:
             # Update visual representation
@@ -580,10 +552,9 @@ class SecondScreen(BoxLayout):
             # Record the computer's move
             self.computer_moves.add(int(computer_choice))
         # Check if computer won with this move
-        self.check_winner(self.computer_moves, "o",computer_choice)
-    
+        self.check_winner(self.computer_moves, "o")
     # Check for win conditions or draw
-    def check_winner(self,player_moves, symbol,player_turn):
+    def check_winner(self,player_moves, symbol):
         """
         Checks if the most recent move resulted in a win or a draw.
         - player_moves: A set of moves for the player being checked.
@@ -591,10 +562,10 @@ class SecondScreen(BoxLayout):
         - player_turn: The specific cell index of the last move. Used here to detect a draw.
         """
         # Check for draw condition (no more moves available) 
-        # This logic is flawed, as `player_turn` will rarely be None. A better check would be the number of total moves or if available_cases is empty.
-        if player_turn is None:  # no more moves left
+        if self.computer_moves|self.player_moves == {i for i in range(9)}:  # no more moves left
             # Highlight all cells to indicate a draw.
             for ent in self.listEntries:
+                ent.cursor_color = colors["LightBlue"]["200"]
                 ent.background_color = colors["LightBlue"]["200"] # Set a light blue background for draw
             
             # Show a popup message for a draw.
@@ -614,6 +585,7 @@ class SecondScreen(BoxLayout):
                 if symbol == 'x': # Player wins
                     # Highlight winning combination with a light green background.
                     for i in case:
+                        self.listEntries[i].cursor_color = colors["LightGreen"]["200"]
                         self.listEntries[i].background_color = colors["LightGreen"]["200"]
                     # Show a popup message for a player win.
                     popup = Popup(
@@ -627,9 +599,11 @@ class SecondScreen(BoxLayout):
                     self.player_scour_textinput.readonly=False
                     self.player_scour_textinput.text = str(int(self.player_scour_textinput.text) + 1)
                     self.player_scour_textinput.readonly=True
+                    self.computer_isWin = False
                 else: # Computer wins
                     # Highlight winning combination with a light red background.
                     for i in case:
+                        self.listEntries[i].cursor_color = colors["Red"]["200"]
                         self.listEntries[i].background_color = colors["Red"]["200"]
                     # Show a popup message for a computer win.
                     popup = Popup(
@@ -643,10 +617,10 @@ class SecondScreen(BoxLayout):
                     self.computer_scour_textinput.readonly=False
                     self.computer_scour_textinput.text = str(int(self.computer_scour_textinput.text) + 1)
                     self.computer_scour_textinput.readonly=True
+                    self.computer_isWin = True
                 # End the game
                 self.gameOver = True       
                 return
-            
     def restart(self,event):
         """
         Resets the game to its initial state for a new match.
@@ -655,6 +629,7 @@ class SecondScreen(BoxLayout):
         # Clear the text from all cells on the board.
         for ent in self.listEntries:
             ent.text = ''
+            ent.cursor_color=(1, 1, 1, 1)
             ent.background_color = (1, 1, 1, 1) # Reset cell background color to white
         # Reset all game state variables to their initial values.
         # This includes the computer's AI state, game over status, and both players' moves.
@@ -667,8 +642,8 @@ class SecondScreen(BoxLayout):
         self.gameOver = False
         self.computer_moves = set()
         self.player_moves = set()
-
-
+        if self.computer_isWin:
+            self.computer_move()
 
 # This is the main Kivy App class. It's the entry point of the application.
 class MyKivyApp(App):
@@ -687,22 +662,19 @@ class MyKivyApp(App):
         # Start by showing the initial screen for mode selection.
         self.root_layout.add_widget(self.initial_screen)
         return self.root_layout
-    
     def switch_first_screen(self,instance=None):
         """Clears the root layout and adds the Player vs. Player screen (FirstScreen)."""
         self.root_layout.clear_widgets()
         self.root_layout.add_widget(self.first_screen)
-
     def switch_second_screen(self,instance=None):
         """Clears the root layout and adds the Player vs. Computer screen (SecondScreen)."""
         self.root_layout.clear_widgets()
         self.root_layout.add_widget(self.second_screen)
-
     def switch_back_initial_screen(self,instance=None):
         """Clears the root layout and adds the initial mode selection screen (InitialScreen)."""
         self.root_layout.clear_widgets()
         self.root_layout.add_widget(self.initial_screen)
-    
+
 # This is the standard Python entry point.
 # If this script is run directly (not imported), it will create an instance
 # of MyKivyApp and start the Kivy application event loop.
